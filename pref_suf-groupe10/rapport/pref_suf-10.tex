@@ -190,7 +190,7 @@ $$SP2\subset SP1$$
   \caption{Invariant SP1}
 \end{figure}
 
-$$Inv: N=N_0 \wedge T=T_0\wedge 0<i\leq N-2$$
+$$Inv: N=N_0 \wedge T=T_0\wedge 0\leq i\leq N-2$$
 
 \subsubsection{Invariant SP2}
 \begin{figure}[h]
@@ -199,42 +199,58 @@ $$Inv: N=N_0 \wedge T=T_0\wedge 0<i\leq N-2$$
   \caption{Invariant SP2}
 \end{figure}
 
-$$Inv: N=N_0\wedge T=T_0\wedge 0\leq j \leq i\wedge MemeSSTableau(T,N,i)=1$$
-\subsection{Gardiens de boucle}
-\begin{itemize}
-  \item SP1: $i<N-1$
-  \item SP2: $j\leq i$
-\end{itemize}
+$$Inv: N=N_0\wedge T=T_0\wedge 0\leq j\leq i$$
 \subsection{Critères d'arrêt}
 \begin{itemize}
-  \item SP1: $i=N-1$
-  \item SP2: $j=i+1 \vee T[j]\neq T[N-1-i+j]$
+  \item SP1: $i=0 \vee taille\_sous\_tableau\neq 0$
+  \item SP2: $j=i$
 \end{itemize}
+\subsection{Gardiens de boucle}
+\begin{itemize}
+  \item SP1: $i>0 \wedge taille\_sous\_tableau=0$
+  \item SP2: $j<i$
+\end{itemize}
+
 \subsection{Fonctions de terminaison}
 \begin{itemize}
-  \item SP1: $N-1-i$
-  \item SP2: $i+1-j$
+  \item SP1: $i$
+  \item SP2: $i-j$
 \end{itemize}
 
 \section{Code}
 
-\subsection{Schéma de la fonction "EgaliteSSTab"}
-\begin{lstlisting}[caption={Schéma de la fonction "EgaliteSSTab"}]
-  {
-    //Initilisation des variables
+\subsection{Code complet de la fonction "prefixe\_suffixe"}
+\begin{lstlisting}[caption={Code complet de la fonction "prefixe\_suffixe"}]
+ int prefixe_suffixe(int *T, const unsigned int N)
+{
+    assert(T!=0 && N>1);
+    //Initialisation des variables
+    unsigned int i=N-2, j;
+    int taille_sous_tableau=0;
 
     //Début SP1
-
-    //SP2
-
+    while(taille_sous_tableau==0 && i!=0){
+        //Début SP2
+        j=0;
+        while(j<i){
+            if(T[j]!=T[N-i+j])
+                j=i+1;
+            j++;
+        }
+        //Fin SP2
+        if(j==i)
+            taille_sous_tableau=i;
+        i--;
+    }
     //Fin SP1
 
+
     return taille_sous_tableau;
-  }//fin EgaliteSSTab
+}//Fin prefixe\_suffixe
 \end{lstlisting}
 
 \subsubsection{Initialisation des variables}
-Cet extrait de code présente le début de notre fonction qui est constitué 
+Cet extrait de code présente le début de la fonction qui est constitué 
 de l'initialisation de nos variables, afin d'arriver au stade où celles-ci vérifient les pré-conditions du SP 1.
 \begin{lstlisting}[caption={Initialisation des variables}]
   (>\textcolor[HTML]{17983b}{\{Pré: $T_{init}\wedge N>1\}$}<)
@@ -244,47 +260,42 @@ de l'initialisation de nos variables, afin d'arriver au stade où celles-ci vér
   int taille_sous_tableau=0, est_pref_et_suf=1;
   (>\textcolor[HTML]{17983b}{\{$T=T_0\wedge N=N_0\wedge i=0\wedge j_{init}\wedge taille\_sous\_tableau=0\wedge est\_pref\_et\_suf=1$\}}<)
 \end{lstlisting}
-Les pré-conditions du SP1 correspondent bien au conditions de notre prédicat final.
-
-\subsubsection{Sous-problème 1}
-\begin{lstlisting}[caption={Sous-problème 1}]
-  (>\textcolor[HTML]{17983b}{\{$Inv: T=T_0\wedge N=N_0\wedge 0\leq i\leq N-1$\}}<)
-  while(i<N-1){
-      (>\textcolor[HTML]{17983b}{\{$Inv\wedge B: T=T_0\wedge N=N_0\wedge 0\leq i\leq N-2$\}}<)
-      j=0;
-      est_pref_et_suf=1;
-      (>\textcolor[HTML]{17983b}{\{$T=T_0\wedge N=N_0\wedge j=0\leq i \leq N-2$\}}<)
-      (>\textcolor[HTML]{17983b}{\{Pré SP2: $T=T_0\wedge N=N_0\wedge j=0\wedge est\_pref\_et\_suf=1$\}}<)
-
-      //SP2
-
-      (>\textcolor[HTML]{17983b}{\{Post SP2: $T=T_0\wedge N=N_0\wedge est\_pref\_et\_suf=MemeSSTableau(T, N, i)$\}}<)
-
-      if(est_pref_et_suf==1)
-          taille_sous_tableau=i+1;
-      (>\textcolor[HTML]{17983b}{\{Post SP1 : $T = T_0 \wedge N = N_0 \wedge est\_pref\_et\_suf = MemeSSTableau(T, N, i)$\}}<)
-      i++;
-      (>\textcolor[HTML]{17983b}{\{$T=T_0\wedge N=N_0\wedge 0\leq i\leq N-1\wedge est\_pref\_et\_suf = MemeSSTableau(T, N, i)$\}}<)
-  }//fin while
-\end{lstlisting}
 
 \newpage
 
+
+\subsubsection{Sous-problème 1}
+\begin{lstlisting}[caption={Sous-problème 1}]
+  (>\textcolor[HTML]{17983b}{\{$Inv: N=N_0\wedge T=T_0\wedge 0\leq i\leq N-2$\}}<)
+  while(taille_sous_tableau==0 && i!=0){
+      (>\textcolor[HTML]{17983b}{\{$Inv\wedge B: T=T_0\wedge N=N_0\wedge 0< i\leq N-2$\}}<)
+
+      //SP2
+
+      if(j==i)
+          taille_sous_tableau=i;
+      i--;
+      (>\textcolor[HTML]{17983b}{\{$N=N_0\wedge T=T_0\wedge 0\leq i\leq N-2$\}}<)
+  }//fin while
+  (>\textcolor[HTML]{17983b}{\{Post SP1 : $T = T_0 \wedge N = N_0 \wedge est\_pref\_et\_suf = MemeSSTableau(T, N, i)$\}}<)
+\end{lstlisting}
+
+
 \subsubsection{Sous-problème 2}
 \begin{lstlisting}[caption={Sous-problème 2}]
-  (>\textcolor[HTML]{17983b}{\{Pré SP2: $T=T_0\wedge N=N_0\wedge j=0\wedge est\_pref\_et\_suf=1$\}}<)
-  (>\textcolor[HTML]{17983b}{\{$Inv:T=T_0\wedge N=N_0\wedge 0\leq j\leq i+1\wedge MemeSSTableau(T, N, i) = 1$\}}<)
-  while(j<=i){
-      (>\textcolor[HTML]{17983b}{\{$Inv\wedge B:T=T_0\wedge N=N_0\wedge 0\leq j\leq i\wedge MemeSSTableau(T, N, i) = 1$\}}<)
-      if(T[j]!=T[N-i+j-1]){
-          est_pref_et_suf=0;
-          j=i;
-      }
-      (>\textcolor[HTML]{17983b}{\{$T=T_0\wedge N=N_0\wedge 0\leq j\leq i+1\wedge est\_pref\_et\_suf=MemeSSTableau(T, N, i)$\}}<)
+  
+  j=0;
+  (>\textcolor[HTML]{17983b}{\{Pré SP2: $T=T_0\wedge N=N_0\wedge j=0 \wedge 0<i\leq N-2$\}}<)
+  
+  (>\textcolor[HTML]{17983b}{\{$Inv: N=N_0\wedge T=T_0\wedge 0\leq j\leq i$\}}<)
+  while(j<i){
+      (>\textcolor[HTML]{17983b}{\{$Inv\wedge B:T=T_0\wedge N=N_0\wedge 0\leq j< i$\}}<)      
+      if(T[j]!=T[N-i+j])
+          j=i+1;
       j++;
-      (>\textcolor[HTML]{17983b}{\{$T=T_0\wedge N=N_0\wedge 0\leq j\leq i\wedge est\_pref\_et\_suf=MemeSSTableau(T, N, i)$\}}<)
+      (>\textcolor[HTML]{17983b}{\{$T=T_0\wedge N=N_0\wedge 0\leq j\leq i$\}}<)
   }
-  (>\textcolor[HTML]{17983b}{\{Post SP2:$T=T_0\wedge N=N_0\wedge est\_pref\_et\_suf=MemeSSTableau(T, N, i)$\}}<)
+  (>\textcolor[HTML]{17983b}{\{Post SP2:$T=T_0\wedge N=N_0$\}}<)
 \end{lstlisting}
 
 
