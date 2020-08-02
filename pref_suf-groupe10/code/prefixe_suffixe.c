@@ -19,15 +19,17 @@ int prefixe_suffixe(int *T, const unsigned int N)
     unsigned int i=N-2, j;
     int taille_sous_tableau=0;
 
-    while(taille_sous_tableau==0 && i!=0){
+    while(i!=0){
         j=0;
         while(j<i){
             if(T[j]!=T[N-i+j])
                 j=i+1;
             j++;
         }
-        if(j==i)
+        if(j==i){
             taille_sous_tableau=i;
+            i=1;
+        }
         i--;
     }
 
