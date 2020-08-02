@@ -97,7 +97,7 @@
 \subsection{Introduction}
 Soit $T$, un tableau à $N$ valeurs entière $(N \geq 0)$. On veut
 construire une fonction qui permet d’obtenir, pour $T$, le plus 
-grand entier $k (k\in2 [0,\dots,N-1])$ tel que le sous-tableau 
+grand entier $k (k\in [0,\dots,N-1])$ tel que le sous-tableau 
 $T[0\dots k-1]$ est à la fois préfixe et suffixe de $T$. 
 Si un tel sous-tableau n’existe pas, la fonction doit renvoyer la 
 valeur 0. Attention, on fait l’hypothèse que $k\neq N$ sinon 
@@ -118,8 +118,6 @@ le problème devient trivial.
 \begin{itemize}
   \item int *$T$ : un tableau d'entier de taille $N$
   \item unsigned int $N$ : la taille du tableau d'entier
-  \item int $est\_pref\_et\_suf$ : une variable booléenne permettant de savoir si le sous tableau 
-  analysé est préfixe et suffixe
   \item int $taille\_sous\_tableau$ : la taille du plus grand sous tableau à la fois préfixe et suffixe de $T$
   \item int $i$, $j$ : des compteurs de boucle
 \end{itemize}
@@ -134,10 +132,10 @@ le problème devient trivial.
 \newpage
 \subsection{Spécifications}
 
-\begin{lstlisting}[caption={Spécification fonction EgaliteSSTab}]
+\begin{lstlisting}[caption={Spécification fonction prefixe\_suffixe}]
   /**
   *
-  * EgaliteSSTab
+  * int prefixe_suffixe(int *T, const unsigned int N)
   *
   * Fonction qui renvoit la taille du plus grand sous tableau 
   * étant préfixe et suffixe
@@ -145,19 +143,19 @@ le problème devient trivial.
   * @param  T un tableau d'entiers initialisé au préalable
   * @param  N un entier définissant la taille de T
   *
-  * @pre : T!=NULL, N>1
+  * @pre : T=T_0 && T!=NULL && N>1 && i=0 && taille_sous_tableau=0
   * @post : T=T_0, N=N_0, taille_sous_tableau = PrefixeSuffixe(T, N)
   *
   * @return : taille_sous_tableau
   */
-  int EgaliteSSTab(int *T, const unsigned int N);
+  int prefixe_suffixe(int *T, const unsigned int N);
   (>\label{code:ret}<)
 \end{lstlisting}
 
 \subsection{Décomposition en sous-problèmes}
 \begin{itemize}
   \item \textbf{Sous-problème 1} : Teste les préfixes/suffixes de T
-en allant de 0 à N-1
+en allant de N-2 à 0
   \item \textbf{Sous-problème 2} : Teste si chaque élément préfixe
 est égal à l'élément correspondant suffixe 
 \end{itemize}
@@ -167,12 +165,12 @@ $$SP2\subset SP1$$
 \begin{itemize}
   \item \textbf{SP1} : 
   \begin{itemize}
-    \item @pre : $$Tinit\wedge T\neq NULL \wedge N>1 \wedge i=0 \wedge taille\_sous\_tableau=0 \wedge est\_pref\_et\_suf=1$$
+    \item @pre : $$Tinit\wedge T\neq NULL \wedge N>1 \wedge i=0 \wedge taille\_sous\_tableau=0$$
     \item @post : $$T=T_0\wedge N=N_0\wedge taille\_sous\_tableau=PrefixeSuffixe (T, N)$$
   \end{itemize}
   \item \textbf{SP2} :
   \begin{itemize}
-  \item @pre : $$T=T_0\wedge N=N_0\wedge j=0\wedge est\_pref\_et\_suf=1$$
+  \item @pre : $$T=T_0\wedge N=N_0\wedge j=0 \wedge 0<i\leq N-2 $$
   \item @post : $$T=T_0\wedge N=N_0\wedge est\_pref\_et\_suf=MemeSSTableau(T, N, i)$$
   \end{itemize}
 \end{itemize}
@@ -185,14 +183,14 @@ $$SP2\subset SP1$$
 \begin{figure}[h]
   \centering
   \begin{tabular}{l|lcr|lcr|l}
-   & 0 &  & \multicolumn{1}{r|}{i-1} & i &  & &N-1 \\ \cline{2-7}
+   & N-2 &  & \multicolumn{1}{r|}{i-1} & i &  & &0 \\ \cline{2-7}
   T: & \cellcolor[HTML]{00ff09} & \cellcolor[HTML]{00ff09} & \cellcolor[HTML]{00ff09} & \cellcolor[HTML]{a3160f} &  \cellcolor[HTML]{a3160f}& \cellcolor[HTML]{a3160f} \\ \cline{2-7}
-  &&Préfixe déjà testé&&&Encore à tester&& \\ \cline{2-7}
+  &&Sous-tableau déjà testé&&&Encore à tester&& \\ \cline{2-7}
   \end{tabular}
   \caption{Invariant SP1}
 \end{figure}
 
-$$Inv: N=N_0 \wedge T=T_0\wedge 0\leq i\leq N-1\wedge taille\_sous\_tableau=PrefixeSuffixe (T, N)$$
+$$Inv: N=N_0 \wedge T=T_0\wedge 0<i\leq N-2$$
 
 \subsubsection{Invariant SP2}
 \begin{figure}[h]

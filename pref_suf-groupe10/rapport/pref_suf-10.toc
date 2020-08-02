@@ -1,0 +1,24 @@
+\babel@toc {french}{}
+\contentsline {section}{\numberline {1}Définition du problème}{3}%
+\contentsline {subsection}{\numberline {1.1}Introduction}{3}%
+\contentsline {subsection}{\numberline {1.2}Input/Output}{3}%
+\contentsline {subsubsection}{\numberline {1.2.1}Input}{3}%
+\contentsline {subsubsection}{\numberline {1.2.2}Output}{3}%
+\contentsline {subsection}{\numberline {1.3}Objets utilisés}{3}%
+\contentsline {section}{\numberline {2}Formalisation du problème}{3}%
+\contentsline {subsection}{\numberline {2.1}Description de notation}{3}%
+\contentsline {subsection}{\numberline {2.2}Spécifications}{4}%
+\contentsline {subsection}{\numberline {2.3}Décomposition en sous-problèmes}{4}%
+\contentsline {subsection}{\numberline {2.4}Spécification des sous-problèmes}{4}%
+\contentsline {subsection}{\numberline {2.5}Invariant}{5}%
+\contentsline {subsubsection}{\numberline {2.5.1}Invariant SP1}{5}%
+\contentsline {subsubsection}{\numberline {2.5.2}Invariant SP2}{5}%
+\contentsline {subsection}{\numberline {2.6}Gardiens de boucle}{5}%
+\contentsline {subsection}{\numberline {2.7}Critères d'arrêt}{5}%
+\contentsline {subsection}{\numberline {2.8}Fonctions de terminaison}{5}%
+\contentsline {section}{\numberline {3}Code}{6}%
+\contentsline {subsection}{\numberline {3.1}Schéma de la fonction "EgaliteSSTab"}{6}%
+\contentsline {subsubsection}{\numberline {3.1.1}Initialisation des variables}{6}%
+\contentsline {subsubsection}{\numberline {3.1.2}Sous-problème 1}{6}%
+\contentsline {subsubsection}{\numberline {3.1.3}Sous-problème 2}{7}%
+\contentsline {section}{\numberline {4}Complexité}{7}%
